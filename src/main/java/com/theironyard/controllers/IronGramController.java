@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 /**
  * Created by Ben on 6/28/16.
@@ -34,7 +35,7 @@ public class IronGramController {
     }
 
     @RequestMapping(path="/upload", method= RequestMethod.POST)
-    public String upload(MultipartFile file, String receiver, HttpSession session) throws Exception {
+    public String upload(MultipartFile file, String receiver, HttpSession session, Integer delTime) throws Exception {
         String username = (String) session.getAttribute("username");
         User sender = users.findFirstByname(username);
         User rec = users.findFirstByname(receiver);
@@ -48,10 +49,16 @@ public class IronGramController {
 
         File photoFile = File.createTempFile("photo", file.getOriginalFilename(), dir);
         FileOutputStream fos = new FileOutputStream(photoFile);
-        fos.write(file.getBytes());
 
-        Photo photo = new Photo(sender, rec, photoFile.getName());
-        photos.save(photo);
+        if (file.getContentType().contains("image")) {
+            fos.write(file.getBytes());
+            Photo photo = new Photo(sender, rec, photoFile.getName(), LocalDateTime.now(), delTime);
+            photos.save(photo);
+        } else {
+            throw new Exception("File selected is not an image!");
+        }
+
+
 
         return "redirect:/";
     }

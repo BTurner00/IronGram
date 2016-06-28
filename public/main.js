@@ -29,8 +29,10 @@ function login() {
             $("#loggedIn").show();
             getPhotos();
 
+
         }
     });
 }
 
 $("#loggedIn").hide();
+

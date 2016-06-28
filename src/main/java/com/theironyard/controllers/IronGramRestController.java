@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * Created by Ben on 6/28/16.
@@ -62,5 +63,17 @@ public class IronGramRestController {
         String username = (String) session.getAttribute("username");
         User user = users.findFirstByname(username);
         return photos.findByRecipient(user);
+    }
+
+    @RequestMapping(path="/public-photos", method=RequestMethod.GET)
+    public Iterable<Photo> getPublicPhotos(String username) {
+        Iterable<Photo> publicPhotos = photos.findByPublicPhotoTrue();
+        ArrayList<Photo> userPublicPhotos = new ArrayList<>();
+        for(Photo photo: publicPhotos) {
+            if(photo.getSender().getName().equals(username)) {
+                userPublicPhotos.add(photo);
+            }
+        }
+        return userPublicPhotos;
     }
 }

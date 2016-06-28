@@ -28,15 +28,27 @@ public class Photo {
     @Column(nullable = false)
     int delTime;
 
+    @Column(nullable = false)
+    Boolean publicPhoto;
+
     public Photo() {
     }
 
-    public Photo(User sender, User recipient, String filename, LocalDateTime time, int delTime) {
+    public Photo(User sender, User recipient, String filename, LocalDateTime time, int delTime, Boolean publicPhoto ) {
         this.sender = sender;
         this.recipient = recipient;
         this.filename = filename;
         this.time = time;
         this.delTime = delTime;
+        this.publicPhoto = publicPhoto;
+    }
+
+    public Boolean getPublicPhoto() {
+        return publicPhoto;
+    }
+
+    public void setPublicPhoto(Boolean publicPhoto) {
+        this.publicPhoto = publicPhoto;
     }
 
     public int getId() {

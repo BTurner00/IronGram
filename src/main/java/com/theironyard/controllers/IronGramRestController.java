@@ -29,7 +29,7 @@ public class IronGramRestController {
 
     @RequestMapping(path="/login", method= RequestMethod.POST)
     public User login(@RequestBody User user, HttpSession session) throws Exception {
-        User userFromDB = users.findFirstByname(user.getName());
+        User userFromDB = users.findFirstByName(user.getName());
         if (userFromDB == null) {
             user.setPassword(PasswordStorage.createHash(user.getPassword()));
             users.save(user);
@@ -61,7 +61,7 @@ public class IronGramRestController {
 
 
         String username = (String) session.getAttribute("username");
-        User user = users.findFirstByname(username);
+        User user = users.findFirstByName(username);
         return photos.findByRecipient(user);
     }
 
@@ -75,5 +75,13 @@ public class IronGramRestController {
             }
         }
         return userPublicPhotos;
+    }
+
+    @RequestMapping(path="/user", method=RequestMethod.GET)
+    public User GetUser(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        if (username==null) {
+            return null;
+        } else return users.findFirstByName(username);
     }
 }
